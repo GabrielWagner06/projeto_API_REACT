@@ -20,53 +20,48 @@ const Products = () => {
     }, []);
     
     const fetchProducts = async () => {
+        let array = []
         
+
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
             url: 'http://localhost:7281/Product/ProductsView',
         };
-        
         await axios.request(config)
         .then((response) => {
+
+            // response.data.itens.forEach((element) => {
+            //     if(element['standardCost'] = 1000) {
+            //         array.push(element)
+            //     }
+            // })
+
             setProducts(response.data.itens)
-            console.log(response.data.itens)
             setLoading(false)
-            // console.log(JSON.stringify(response.data))
+            console.log(response.data.itens)
         })
         .catch((error) => {
             console.log(error)
         })
-        
-        // try {  
-        //   setProducts(response.data.itens);
-        //   setLoading(false);
-        // } catch (error) {
-        //   console.error('Error fetching products:', error);
-        //   setLoading(false);
-        // }
     };
     
     const columns = [
         {
             title: 'Product ID',
             dataIndex: 'productID',
-            key: 'productID',
         },
         {
             title: 'Name',
             dataIndex: 'name',
-            key: 'name',
         },
         {
             title: 'Product Number',
             dataIndex: 'productNumber',
-            key: 'productNumber',
         },
         {
             title: 'R$ Standard Cost',
             dataIndex: 'standardCost',
-            key: 'StandardCost',
             render: (text) => {
                 
                 if (text > 1000) {
@@ -80,7 +75,6 @@ const Products = () => {
         {
             title: 'List Price',
             dataIndex: 'listPrice',
-            key: 'listPrice',
             render: (text,) => {
                
                 
@@ -88,32 +82,35 @@ const Products = () => {
                     return <div style={{ color: 'green' }}>R$ {text}</div>
                 }
                 
-                return <div style={{ color: 'red' }}>R$ {text}</div>;
+                return `R$ ${text}`, <div style={{ color: 'red' }}>R$ {text}</div>;
             }
         },
         
-        {
-            title: 'porcentragem de lucro',
-            key: 'listPrice',
-            render: (abacte, uva) => {
-                return `% ${uva.listPrice - uva.standardCost}`
+       {
+            title: 'porcentagem de lucro',
+            render: (text, uva) => {
+                const total = uva.listPrice / uva.standardCost;
+                const formattedTotal = (total * 1).toFixed(2).replace(',', '.');
+                const textToShow = `% ${formattedTotal}`;
+                if (total > 2) {
+                return <div style={{ color: 'green' }}>R$ {textToShow}</div>;
+                }
+                return <div style={{ color: 'red' }}>R$ {textToShow}</div>;
             }
         },
+
         
         {
             title: 'Subcategory',
             dataIndex: 'subcategory',
-            key: 'subcategory',
         },
         {
             title: 'Category',
             dataIndex: 'category',
-            key: 'category',
         },
         {
             title: 'Model',
             dataIndex: 'model',
-            key: 'model',
         },
         
     ];
